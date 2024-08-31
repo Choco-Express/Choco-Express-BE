@@ -56,6 +56,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: 'ap-northeast-2'
 
+      - name: Set Github Actions IP
+        run: |
+          TEMP_IP=$(curl -s http://checkip.amazonaws.com)
+          echo "TEMP_IP=$TEMP_IP" >> $GITHUB_ENV
 
       - name: Add GitHub Actions IP
         run: |
@@ -63,8 +67,7 @@ jobs:
             --group-id ${{ secrets.SECURITY_GROUP_ID }} \
             --protocol tcp \
             --port 22 \
-            --cidr ${{ steps.ip.outputs.ipv4 }}/32
-
+            --cidr ${{ TEMP_IP }}/32
 
       - name: Connect Bastion Host And Run deploy.sh
         uses: appleboy/ssh-action@v1.0.0
@@ -82,4 +85,4 @@ jobs:
             --group-id ${{ secrets.SECURITY_GROUP_ID }} \
             --protocol tcp \
             --port 22 \
-            --cidr ${{ steps.ip.outputs.ipv4 }}/32
+            --cidr ${{ TEMP_IP }}/32
