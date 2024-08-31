@@ -69,7 +69,6 @@ jobs:
             --port 22 \
             --cidr ${{ TEMP_IP }}/32
 
-
       - name: Connect Bastion Host And Run deploy.sh
         uses: appleboy/ssh-action@v1.0.0
         with:
