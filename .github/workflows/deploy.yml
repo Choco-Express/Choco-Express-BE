@@ -67,7 +67,7 @@ jobs:
             --group-id ${{ secrets.SECURITY_GROUP_ID }} \
             --protocol tcp \
             --port 22 \
-            --cidr ${{ TEMP_IP }}/32
+            --cidr ${ TEMP_IP }/32
 
 
       - name: Connect Bastion Host And Run deploy.sh
@@ -86,4 +86,4 @@ jobs:
             --group-id ${{ secrets.SECURITY_GROUP_ID }} \
             --protocol tcp \
             --port 22 \
-            --cidr ${{ TEMP_IP }}/32
+            --cidr ${ TEMP_IP }/32
