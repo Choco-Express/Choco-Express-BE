@@ -13,6 +13,7 @@ public class Constants {
             "/api/health-check",
             "/api/auth/sign-up",
             "/api/auth/sign-in",
-            "/oauth2/authorization/kakao"
+            "/oauth2/authorization/kakao",
+            "/login/oauth2/code/kakao"
     );
 }
