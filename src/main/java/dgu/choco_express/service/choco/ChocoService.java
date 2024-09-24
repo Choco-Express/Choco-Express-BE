@@ -36,17 +36,19 @@ public class ChocoService {
             ChocoCreateRequestDto chocoCreateRequestDto
     ) {
         User currentUser = userRetriever.findById(userId);
-
         Short chocoType = chocoCreateRequestDto.chocoType();
         String chocoNickname = chocoCreateRequestDto.nickname();
         String chocoContents = chocoCreateRequestDto.contents();
         Box currentBox = boxRetriever.findById(boxId);
 
-
         if (chocoType < 1 || chocoType > 6)
             throw CommonException.type(ChocoErrorCode.INVALID_CHOCO_TYPE);
         if (chocoNickname.isEmpty())
             throw CommonException.type(ChocoErrorCode.INVALID_CHOCO_NAME);
+        if (chocoContents.isEmpty())
+            throw CommonException.type(ChocoErrorCode.INVALID_CHOCO_CONTENT);
+        if (currentUser.equals(currentBox.getUser()))
+            throw CommonException.type(ChocoErrorCode.CANT_CHOCO_RECURSIVE);
 
         Choco createdChoco = chocoSaver.saveChoco(
             Choco.from(chocoType, chocoNickname, chocoContents, currentBox)
@@ -91,6 +93,9 @@ public class ChocoService {
         User currentUser = userRetriever.findById(userId);
         Choco choco = chocoRetriever.findById(chocoId);
 
+        if (!currentUser.equals(choco.getBox().getUser()))
+            throw CommonException.type(ChocoErrorCode.CANT_READ_CHOCO);
+
         return ChocoDetailsResponseDto.of(choco);
     }
 
@@ -99,6 +104,9 @@ public class ChocoService {
     ) {
         User currentUser = userRetriever.findById(userId);
         Box currentBox = boxRetriever.findByUser(currentUser);
+
+        if (!currentUser.equals(currentBox.getUser()))
+            throw CommonException.type(ChocoErrorCode.CANT_READ_BOX);
 
         return ChocoPeekResponseDto.builder()
                 .count(chocoRetriever.findChocoCountByBox(currentBox))
@@ -111,6 +119,9 @@ public class ChocoService {
     ) {
         User currentUser = userRetriever.findById(userId);
         Choco choco = chocoRetriever.findById(chocoId);
+
+        if(!currentUser.equals(choco.getBox().getUser()))
+            throw CommonException.type(ChocoErrorCode.CANT_DELETE_CHOCO);
 
         chocoRemover.deleteChoco(choco);
 
