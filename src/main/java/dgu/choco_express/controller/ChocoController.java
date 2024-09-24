@@ -54,6 +54,9 @@ public class ChocoController {
             @UserId Long userId,
             @PathVariable Long chocoId
     ) {
-        return ResponseEntity.ok(chocoService.deleteChoco(userId, chocoId));
+        chocoService.deleteChoco(userId, chocoId);
+
+        return ResponseEntity.noContent()
+                .build();
     }
 }
